@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler')
-const Appointment = require("../model/Appointment");
+
 const Doctor = require("../model/Doctor");
-const Patients = require("../model/Patients");
+const Appointment = require('../model/Appointment');
 
 // exports.bookAppointmentPatient = asyncHandler(async (req, res) => {
 //     const { doctorId, date, timeSlot, } = req.body;
@@ -79,5 +79,26 @@ exports.fetchDoctorsById = asyncHandler(async (req, res) => {
         console.log(error)
         return res.json({ succes: false, message: error.message })
     }
+
+})
+// exports.gePatientHistory = asyncHandler(async (req, res) => {
+//     const result = await Appointment
+//         .find({ Patients: req.patient })
+//         .populate("doctorId", "name profileImage")
+//         .sort({ createdAt: -1 })
+
+
+//     res.json({ message: "History fetch success", result })
+// })
+exports.getPatientHistory = asyncHandler(async (req, res) => {
+
+    const result = await Appointment.find({ patientId: req.patient })
+        .populate("doctorId", "name profileImage")
+        .select("-patientId -createdAt -updatedAt -__v")
+    if (!result) {
+        return res.status(404).json({ message: "No history found" });
+    }
+
+    res.json({ message: "History fetch success", result });
 
 })

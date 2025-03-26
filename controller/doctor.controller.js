@@ -3,7 +3,7 @@ const Appointment = require("../model/Appointment")
 
 exports.showAppoinmentToDoctor = asyncHandler(async (req, res) => {
     const result = await Appointment.find({ doctorId: req.loggedInDoctor }).populate('patientId', 'name email address mobile')
-    if (!result.length) {
+    if (!result) {
         return res.status(404).json({ message: "No appointments found for this doctor" });
     }
     res.json({ message: " Appoinment fetch success", result })
