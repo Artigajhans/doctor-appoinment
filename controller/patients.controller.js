@@ -93,7 +93,7 @@ exports.fetchDoctorsById = asyncHandler(async (req, res) => {
 exports.getPatientHistory = asyncHandler(async (req, res) => {
 
     const result = await Appointment.find({ patientId: req.patient })
-        .populate("doctorId", "name profileImage")
+        .populate("doctorId", "name profileImage specialization mobile  address")
         .select("-patientId -createdAt -updatedAt -__v")
     if (!result) {
         return res.status(404).json({ message: "No history found" });
