@@ -3,6 +3,5 @@ const { DeclineAppointment, AcceptAppointment, showAppoinmentToDoctor } = requir
 const router = require("express").Router()
 router
     .get("/doctor-showAppoin", showAppoinmentToDoctor)
-    .put("/doctor-declineAppoint/:aid", DeclineAppointment)
     .put("/doctor-acceptAppoint/:aid", AcceptAppointment)
 module.exports = router

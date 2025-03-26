@@ -8,21 +8,41 @@ exports.showAppoinmentToDoctor = asyncHandler(async (req, res) => {
     }
     res.json({ message: " Appoinment fetch success", result })
 })
+// exports.AcceptAppointment = asyncHandler(async (req, res) => {
+
+//     const result = await Appointment.findByIdAndUpdate(req.params.id, { status }, { new: true });
+//     if (!result) {
+//         return res.status(404).json({ message: "Appointment not found" });
+//     }
+//     return res.json({ message: "Appointment accepted successfully", result });
+
+// });
+
+// exports.DeclineAppointment = asyncHandler(async (req, res) => {
+//     const result = await Appointment.findByIdAndUpdate(req.params.id, { status: "Declined" }, { new: true });
+//     if (!result) {
+//         return res.status(404).json({ message: "Appointment not found" });
+//     }
+//     return res.json({ message: "Appointment declined success", result });
+
+// });
+
 exports.AcceptAppointment = asyncHandler(async (req, res) => {
+    const { status } = req.body;
 
-    const result = await Appointment.findByIdAndUpdate(req.params.id, { status: "Accepted" }, { new: true });
-    if (!result) {
+    if (!["Pending", "Accepted", "Declined"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    const appointment = await Appointment.findByIdAndUpdate(
+        req.params.id,
+        { status },
+        { new: true }
+    );
+
+    if (!appointment) {
         return res.status(404).json({ message: "Appointment not found" });
     }
-    return res.json({ message: "Appointment accepted successfully", result });
 
-});
-
-exports.DeclineAppointment = asyncHandler(async (req, res) => {
-    const result = await Appointment.findByIdAndUpdate(req.params.id, { status: "Declined" }, { new: true });
-    if (!result) {
-        return res.status(404).json({ message: "Appointment not found" });
-    }
-    return res.json({ message: "Appointment declined success", result });
-
+    res.json({ message: `Appointment ${status.toLowerCase()} successfully`, appointment });
 });

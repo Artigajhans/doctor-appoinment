@@ -41,14 +41,19 @@ exports.BookAppointment = asyncHandler(async (req, res) => {
 })
 exports.cancelAppointment = asyncHandler(async (req, res) => {
     console.log(req.params);
-    const result = await Appointment.findByIdAndUpdate(req.params.aid, { status: 'Cancelled' }, { new: true })
-    return res.json({ message: "appointment deleted successfully", result })
-})
+    const result = await Appointment.findByIdAndDelete(req.params.aid, { status: 'Cancelled' }, { new: true });
+    return res.json({ message: "Appointment cancelled successfully", result });
+});
 
 exports.getPatientAppointments = asyncHandler(async (req, res) => {
+    const p_Id = req.patient
+    console.log(req.patient);
+
     //                                                      middleware 
-    const result = await Appointment.find({ patientId: req.patient, isDeleted: false })
-        .populate('doctorId', 'name email address phone specialization')
+    const result = await Appointment.find({ patientId: req.patient })
+        .populate('doctorId', 'name email address status mobile specialization')
+    console.log("reee", result);
+
     return res.json({ message: "Appointments fetched success", result })
 })
 

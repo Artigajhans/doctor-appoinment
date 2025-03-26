@@ -26,7 +26,10 @@ exports.patientProtected = asyncHandler(async (req, res, next) => {
             console.log(err)
             return res.status(401).json({ message: "invalid token" })
         }
+        console.log("decode._id", decode._id);
+
         req.patient = decode._id
+        console.log("patientMidd", req.patient);
         next()
     })
 })
